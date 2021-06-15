@@ -2,7 +2,6 @@ import socket
 import threading
 
 host = '127.0.0.1'
-
 port = 55555
 
 # to start server
