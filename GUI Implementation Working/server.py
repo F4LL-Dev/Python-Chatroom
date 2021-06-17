@@ -6,7 +6,7 @@ port = 55555
 
 # to start server
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server.bind((host, port))
 server.listen()
 
@@ -28,14 +28,14 @@ def manage(client):
             message = client.recv(1024).decode('ascii')
             if message.startswith('KICK'):
                 if nicknames[clients.index(client)] == 'admin':
-                    name_to_kick = message[5:]
+                    name_to_kick = message[5:].strip('\n')
 
                     kick_user(name_to_kick)
                 else:
                     client.send('Command was refused!'.encode('ascii'))
             elif message.startswith('BAN'):
                 if nicknames[clients.index(client)] == 'admin':
-                    name_to_ban = message[4:]
+                    name_to_ban = message[4:].strip('\n')
                     kick_user(name_to_ban)
                     with open('bans.txt', 'a') as f:
                         f.write(f'{name_to_ban}\n')
